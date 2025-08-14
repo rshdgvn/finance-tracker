@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const nav = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -12,21 +15,24 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({}); // clear previous errors
+    setErrors({});
 
     try {
       const res = await fetch("/api/register", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(form),
       });
 
       const data = await res.json();
 
-      console.log(data)
       if (!res.ok) {
         setErrors(data.errors || {});
       } else {
         console.log("Registered successfully:", data);
+        nav("/dashboard"); 
       }
     } catch (err) {
       console.error("Error:", err);

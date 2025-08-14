@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [form, setForm] = useState({
@@ -8,12 +9,14 @@ const Login = () => {
 
   const [errors, setErrors] = useState({});
 
+  const nav = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({}); // clear previous errors
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/login", {
+      const res = await fetch("api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,9 +37,9 @@ const Login = () => {
         return;
       }
 
-      // Success — store token, redirect, etc.
       console.log("Login successful:", data);
       localStorage.setItem("token", data.token);
+      nav("/dashboard");
 
     } catch (error) {
       console.error("Login error:", error);
@@ -56,7 +59,9 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Email</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Email
+            </label>
             <input
               type="email"
               value={form.email}
@@ -70,7 +75,9 @@ const Login = () => {
           </div>
 
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Password</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Password
+            </label>
             <input
               type="password"
               value={form.password}
