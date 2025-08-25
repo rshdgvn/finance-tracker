@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const nav = useNavigate();
-
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
     password_confirmation: "",
   });
+
+  const nav = useNavigate();
 
   const [errors, setErrors] = useState({});
 
@@ -22,6 +22,7 @@ const Register = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify(form),
       });
@@ -31,8 +32,10 @@ const Register = () => {
       if (!res.ok) {
         setErrors(data.errors || {});
       } else {
+        localStorage.setItem("token", data.token);
+
         console.log("Registered successfully:", data);
-        nav("/dashboard"); 
+        nav("/dashboard");
       }
     } catch (err) {
       console.error("Error:", err);
