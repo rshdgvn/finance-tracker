@@ -28,6 +28,5 @@ This app helps you manage expenses, income, and budgets while visualizing your f
 
 **Frontend:**
 - [React](https://reactjs.org/)  
-- [Axios](https://axios-http.com/) for API requests  
 - [TailwindCSS](https://tailwindcss.com/) for styling  
 - [Recharts](https://recharts.org/) for graphs  
