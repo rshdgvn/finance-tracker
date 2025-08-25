@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Login = () => {
+  const { setToken } = useAuth();
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -13,7 +15,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({}); // clear previous errors
+    setErrors({});
 
     try {
       const res = await fetch("api/login", {
@@ -28,7 +30,6 @@ const Login = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        // Laravel validation errors
         if (data.errors) {
           setErrors(data.errors);
         } else if (data.message) {
@@ -39,8 +40,8 @@ const Login = () => {
 
       console.log("Login successful:", data);
       localStorage.setItem("token", data.token);
+      setToken(data.token);
       nav("/dashboard");
-
     } catch (error) {
       console.error("Login error:", error);
     }

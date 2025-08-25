@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Register = () => {
+  const { setToken } = useAuth();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -33,7 +35,7 @@ const Register = () => {
         setErrors(data.errors || {});
       } else {
         localStorage.setItem("token", data.token);
-
+        setToken(data.token)
         console.log("Registered successfully:", data);
         nav("/dashboard");
       }

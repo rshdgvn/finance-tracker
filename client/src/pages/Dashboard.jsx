@@ -1,8 +1,11 @@
 import React from "react";
 import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 const Dashboard = () => {
-  const { token, setToken } = useAuth();
+  const { token, setToken, user } = useAuth();
+  const nav = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -16,7 +19,7 @@ const Dashboard = () => {
       });
 
       if (res.ok) {
-        nav('/')
+        nav("/");
         localStorage.removeItem("token");
         setToken(null);
         console.log("Logged out successfully");
@@ -30,10 +33,18 @@ const Dashboard = () => {
   };
 
   return (
-    <>
-      <div>Dashboard</div>
-      <button onClick={handleLogout}>Log Out</button>
-    </>
+    <div className="min-h-screen w-full bg-gray-100 flex flex-col">
+      <Navbar handleLogout={handleLogout} user={user} />
+      <main className="flex-1 p-6">
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">Dashboard</h1>
+        <div className="bg-white p-6 rounded-xl shadow">
+          <p className="text-gray-600">
+            Dashboard content here. Click on "Transactions" in the navbar to
+            navigate.
+          </p>
+        </div>
+      </main>
+    </div>
   );
 };
 
