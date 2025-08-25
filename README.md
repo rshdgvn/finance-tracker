@@ -1,4 +1,4 @@
-# 💰 Finance Tracker
+# Finance Tracker
 
 A simple and powerful **Finance Tracker** built with:
 - **Laravel API** (backend)
@@ -8,14 +8,14 @@ This app helps you manage expenses, income, and budgets while visualizing your f
 
 ---
 
-## 🚀 Features
+## Features
 
-- 📊 Track income and expenses
-- 📝 Categorize transactions
-- 🔍 Search & filter history
-- 📅 Monthly and yearly summaries
-- 📈 Interactive charts (React + Recharts)
-- 🔐 User authentication (via Laravel API)
+- Track income and expenses
+- Categorize transactions
+- Search & filter history
+- Monthly and yearly summaries
+- Interactive charts (React + Recharts)
+- User authentication (via Laravel API)
 
 ---
 
