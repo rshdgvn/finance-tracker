@@ -16,4 +16,25 @@ class TransactionController extends Controller
             "transactions" => Transaction::where('user_id', $user->id)->get(),
         ], 200);
     }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'type' => 'required|in:income,expense',
+            'amount' => 'required|numeric',
+            'date' => 'required|date',
+            'description' => 'nullable|string',
+        ]);
+
+        $data['user_id'] = $request->user()->id();
+        
+        $transaction = Transaction::create($data);
+
+        return response()->json([
+            'message' => 'Added transaction successuly',
+            'transaction' => $transaction
+        ], 201);
+    }
+
 }
