@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import Navbar from "../components/Navbar";
+import AddTransactionModal from "../components/AddTransactionModal";
 
 const Transactions = () => {
   const { token, user } = useAuth();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const getTransactions = async () => {
     try {
@@ -39,6 +41,12 @@ const Transactions = () => {
       <Navbar user={user} />
       <main className="flex-1 p-6">
         <h1 className="text-2xl font-bold text-gray-800 mb-4">Transactions</h1>
+        <button
+          onClick={() => setIsOpen(true)}
+          className="bg-blue-500 hover:bg-blue-600 text-black px-4 py-2 rounded-lg transition"
+        >
+          Add new
+        </button>
         {loading ? (
           <div className="flex justify-center items-center min-h-screen bg-gray-100">
             <p className="text-gray-500">Loading transactions...</p>
@@ -71,6 +79,7 @@ const Transactions = () => {
           </div>
         )}
       </main>
+      <AddTransactionModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </div>
   );
 };

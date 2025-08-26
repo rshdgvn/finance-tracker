@@ -27,7 +27,7 @@ class TransactionController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $data['user_id'] = $request->user()->id();
+        $data['user_id'] = $request->user()->id;
         
         $transaction = Transaction::create($data);
 

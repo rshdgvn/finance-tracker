@@ -26,7 +26,7 @@ const AddTransactionModal = ({ isOpen, onClose, onTransactionAdded }) => {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/transactions", {
+      const res = await fetch("/api/transactions/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,6 +36,7 @@ const AddTransactionModal = ({ isOpen, onClose, onTransactionAdded }) => {
       });
 
       const data = await res.json();
+      console.log(data)
 
       if (!res.ok) {
         setErrors(data.errors || {});
