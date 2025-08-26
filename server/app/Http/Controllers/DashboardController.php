@@ -8,6 +8,27 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
+    public function totals()
+    {
+        $user = Auth::user();
+
+        $totalIncome = Transaction::where('user_id', $user->id)
+            ->where('type', 'income')
+            ->sum('amount');
+
+        $totalExpenses = Transaction::where('user_id', $user->id)
+            ->where('type', 'expense')
+            ->sum('amount');
+
+        $balance = $totalIncome - $totalExpenses;
+
+        return response()->json([
+            'total_income' => $totalIncome,
+            'total_expenses' => $totalExpenses,
+            'balance' => $balance,
+        ]);
+    }
+    
     public function stats()
     {
         $user = Auth::user();
