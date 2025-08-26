@@ -12,18 +12,25 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        $income = Transaction::where('user_id', $user->id)
+        $income = Transaction::selectRaw('YEAR(date) as year, MONTH(date) as month, SUM(amount) as total')
+            ->where('user_id', $user->id)
             ->where('type', 'income')
-            ->sum('amount');
+            ->groupBy('year', 'month')
+            ->orderBy('year')
+            ->orderBy('month')
+            ->get();
 
-        $expenses = Transaction::where('user_id', $user->id)
+        $expenses = Transaction::selectRaw('YEAR(date) as year, MONTH(date) as month, SUM(amount) as total')
+            ->where('user_id', $user->id)
             ->where('type', 'expense')
-            ->sum('amount');
+            ->groupBy('year', 'month')
+            ->orderBy('year')
+            ->orderBy('month')
+            ->get();
 
         return response()->json([
-            'total_income' => $income,
-            'total_expenses' => $expenses,
-            'balance' => $income - $expenses,
+            'income' => $income,
+            'expenses' => $expenses,
         ]);
     }
 }

@@ -30,5 +30,5 @@ Route::prefix('transactions')
 Route::prefix('dashboard')
     ->middleware('auth:sanctum')
     ->group(function () {
-        Route::get('/stats', [TransactionController::class, 'stats']);
+        Route::get('/stats', [DashboardController::class, 'stats']);
     });

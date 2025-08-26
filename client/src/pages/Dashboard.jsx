@@ -34,7 +34,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen w-full bg-gray-100 flex flex-col">
-      <Navbar handleLogout={handleLogout} user={user} />
+      <Navbar handleLogout={() => handleLogout} user={user} />
       <main className="flex-1 p-6">
         <h1 className="text-2xl font-bold text-gray-800 mb-4">Dashboard</h1>
         <div className="bg-white p-6 rounded-xl shadow">
