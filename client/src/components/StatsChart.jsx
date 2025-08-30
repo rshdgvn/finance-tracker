@@ -17,6 +17,10 @@ const StatsChart = () => {
 
   useEffect(() => {
     const fetchStats = async () => {
+      if (!token) {
+        return;
+      }
+      
       try {
         const res = await fetch("/api/dashboard/stats", {
           headers: {

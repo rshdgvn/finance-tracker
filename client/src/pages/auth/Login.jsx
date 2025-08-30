@@ -1,44 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 const Login = () => {
   const { setToken } = useAuth();
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-
+  const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
-
   const nav = useNavigate();
 
+  // Standard email/password login
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
 
     try {
-      const res = await fetch("api/login", {
+      const res = await fetch("/api/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(form),
       });
 
       const data = await res.json();
-
       if (!res.ok) {
-        if (data.errors) {
-          setErrors(data.errors);
-        } else if (data.message) {
-          setErrors({ general: data.message });
-        }
+        setErrors(data.errors || { general: data.message });
         return;
       }
 
-      console.log("Login successful:", data);
       localStorage.setItem("token", data.token);
       setToken(data.token);
       nav("/dashboard");
@@ -47,64 +34,59 @@ const Login = () => {
     }
   };
 
+  // Google login: redirect user
+  const handleGoogleLogin = async () => {
+    try {
+      const res = await fetch("/api/auth/google/redirect");
+      const data = await res.json();
+      if (!data.url) return;
+      window.location.href = data.url;
+    } catch (error) {
+      console.error("Google login error:", error);
+    }
+  };
+
+  // Check for token after Google redirect
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    if (token) {
+      localStorage.setItem("token", token);
+      setToken(token);
+      nav("/dashboard");
+    }
+  }, [nav, setToken]);
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-          Login
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Login</h2>
 
-        {errors.general && (
-          <p className="text-red-500 text-sm mb-4">{errors.general}</p>
-        )}
+        {errors.general && <p className="text-red-500 text-sm mb-4">{errors.general}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Email
-            </label>
+            <label>Email</label>
             <input
               type="email"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               placeholder="Enter your email"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email[0]}</p>
-            )}
           </div>
-
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Password
-            </label>
+            <label>Password</label>
             <input
               type="password"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               placeholder="Enter your password"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
-            {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password[0]}</p>
-            )}
           </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition"
-          >
-            Login
-          </button>
+          <button type="submit">Login</button>
         </form>
 
-        <p className="mt-4 text-center text-gray-600">
-          Don't have an account?{" "}
-          <a href="/register" className="text-blue-500 hover:underline">
-            Register here
-          </a>
-        </p>
+        <button onClick={handleGoogleLogin}>Login with Google</button>
       </div>
     </div>
   );

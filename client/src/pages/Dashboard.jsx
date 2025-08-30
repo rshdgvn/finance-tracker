@@ -16,6 +16,8 @@ const Dashboard = () => {
 
   const handleLogout = async () => {
     try {
+      if (!token) return;
+
       const res = await fetch("/api/logout", {
         method: "POST",
         headers: {
@@ -26,9 +28,12 @@ const Dashboard = () => {
       });
 
       if (res.ok) {
-        nav("/");
-        localStorage.removeItem("token");
         setToken(null);
+        localStorage.removeItem("token");
+        const data = await res.json();
+        console.log("Logout response:", data);
+
+        nav("/");
       } else {
         console.error("Logout failed:", await res.json());
       }
@@ -38,6 +43,8 @@ const Dashboard = () => {
   };
 
   const fetchTotals = async () => {
+    if (!token) return;
+
     try {
       const res = await fetch("/api/dashboard/totals", {
         headers: {
@@ -45,6 +52,14 @@ const Dashboard = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      if (res.status === 401) {
+        // token invalid or expired
+        setToken(null);
+        localStorage.removeItem("token");
+        nav("/login");
+        return;
+      }
 
       if (!res.ok) throw new Error("Failed to fetch totals");
 
@@ -61,8 +76,12 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    fetchTotals();
-  }, [token]);
+    if (!token) {
+      nav("/");
+    } else {
+      fetchTotals();
+    }
+  }, []);
 
   return (
     <div className="min-h-screen w-full bg-gray-100 flex flex-col">
