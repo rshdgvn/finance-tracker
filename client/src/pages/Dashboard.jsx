@@ -54,7 +54,6 @@ const Dashboard = () => {
       });
 
       if (res.status === 401) {
-        // token invalid or expired
         setToken(null);
         localStorage.removeItem("token");
         nav("/login");
