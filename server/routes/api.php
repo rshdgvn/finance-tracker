@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\TransactionController;
 
 use Illuminate\Http\Request;
@@ -33,3 +34,8 @@ Route::prefix('dashboard')
         Route::get('/totals', [DashboardController::class, 'totals']);
         Route::get('/stats', [DashboardController::class, 'stats']);
     });
+
+Route::prefix('auth/google')->group(function () {
+    Route::get('/redirect', [GoogleAuthController::class, 'redirect']); 
+    Route::get('/callback', [GoogleAuthController::class, 'callback']);  
+});
