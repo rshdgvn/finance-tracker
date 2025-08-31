@@ -24,7 +24,8 @@ This app helps you manage expenses, income, and budgets while visualizing your f
 **Backend (API):**
 - [Laravel](https://laravel.com/)  
 - MySQL / MariaDB  
-- Sanctum (for authentication)  
+- Sanctum (for authentication)
+- Socialite (for google OAuth)
 
 **Frontend:**
 - [React](https://reactjs.org/)  
